@@ -30,18 +30,18 @@ const LETTER_POOL = {
 const HAND_SIZE = 10;
 
 const makeDrawPile = () => {
-  let drawPile = [];
+  const drawPile = [];
 
   for (const [letter, count] of Object.entries(LETTER_POOL)) {
-    let lettersToAdd = Array(count).fill(letter);
+    const lettersToAdd = Array(count).fill(letter);
     drawPile.push(...lettersToAdd);
   }
   return drawPile;
 };
 
 export const drawLetters = () => {
-  let newPile = makeDrawPile();
-  let hand = [];
+  const newPile = makeDrawPile();
+  const hand = [];
 
   for (let i = 0; i < HAND_SIZE; i++) {
     hand.push(...newPile.splice(Math.floor(Math.random() * newPile.length), 1));
@@ -49,8 +49,28 @@ export const drawLetters = () => {
   return hand;
 };
 
+const countLetter = (input, letter) => {
+  let count = 0;
+
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === letter) {
+      count++;
+    }
+  }
+  return count;
+};
+
 export const usesAvailableLetters = (input, lettersInHand) => {
-  // Implement this method for wave 2
+  if (input === '') {
+    return false;
+  }
+  const upperCaseWord = input.toUpperCase();
+  for (const letter of upperCaseWord) {
+    if (countLetter(upperCaseWord, letter) > countLetter(lettersInHand, letter)) {
+      return false;
+    }
+  }
+  return true;
 };
 
 export const scoreWord = (word) => {
