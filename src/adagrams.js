@@ -64,6 +64,7 @@ export const usesAvailableLetters = (input, lettersInHand) => {
   if (input === '') {
     return false;
   }
+
   const upperCaseWord = input.toUpperCase();
   for (const letter of upperCaseWord) {
     if (countLetter(upperCaseWord, letter) > countLetter(lettersInHand, letter)) {
@@ -92,12 +93,69 @@ export const scoreWord = (word) => {
       totalScore += SCORE_CHART[letter];
     }
   }
+
   if (word.length >= BONUS_MIN_LENGTH) {
     totalScore += BONUS_POINTS;
   }
+
   return totalScore;
 };
 
 export const highestScoreFrom = (words) => {
-  // Implement this method for wave 4
+  const scoreList = [];
+
+  for (const word of words) {
+    const score = scoreWord(word);
+    scoreList.push(score);
+  }
+
+  let winningScore = scoreList[0];
+  for (const score of scoreList) {
+    if (score > scoreList[0]) {
+      winningScore = score;
+    }
+  }
+
+  let i = 0;
+  const highScoreWords = [];
+
+  for (const score of scoreList) {
+    if (score === winningScore) {
+      highScoreWords.push(words[i]);
+    }
+    i++;
+  }
+
+  let fewestLetterWord = highScoreWords[0];
+  for (const word of highScoreWords) {
+    if (word.length < fewestLetterWord.length) {
+      fewestLetterWord = word;
+    }
+  }
+
+  const fewestLetterWords = [];
+  for (const word of highScoreWords) {
+    if (word.length === fewestLetterWord.length) {
+      fewestLetterWords.push(word);
+    }
+  }
+
+  const lengthTenWords = [];
+  for (const word of highScoreWords) {
+    if (word.length === 10) {
+      lengthTenWords.push(word);
+    }
+  }
+
+  let winningWord = '';
+  if (lengthTenWords.length > 0) {
+    winningWord = lengthTenWords[0];
+  } else {
+    winningWord = fewestLetterWords[0];
+  }
+
+  return {
+    'word': winningWord,
+    'score': winningScore
+  };
 };
